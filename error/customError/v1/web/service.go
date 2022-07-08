@@ -2,7 +2,7 @@ package web
 
 import (
 	"fmt"
-	"goTestProject/error/customError/errors"
+	errors2 "goTestProject/error/customError/v1/errors"
 )
 
 func getResultService(id int) (Model, error) {
@@ -11,9 +11,9 @@ func getResultService(id int) (Model, error) {
 		msg := fmt.Sprintf("error getting the  result with id %d", id)
 		switch err {
 		case NoResult:
-			err = errors.NotFound.Wrap(err, msg)
+			err = errors2.NotFound.Wrap(err, msg)
 		default:
-			err = errors.Wrapf(err, msg)
+			err = errors2.Wrapf(err, msg)
 		}
 		return nil, err
 	}

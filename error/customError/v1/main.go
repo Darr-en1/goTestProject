@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"goTestProject/error/customError/errors"
-	"goTestProject/error/customError/web"
+	errors2 "goTestProject/error/customError/v1/errors"
+	web2 "goTestProject/error/customError/v1/web"
 	"log"
 	"net/http"
 )
@@ -13,19 +13,19 @@ func ErrWrapper(handler func(g *gin.Context) (interface{}, error)) func(*gin.Con
 		data, err := handler(context)
 		if err != nil {
 			var status int
-			errorType := errors.GetType(err)
+			errorType := errors2.GetType(err)
 			switch errorType {
-			case errors.BadRequest:
+			case errors2.BadRequest:
 				status = http.StatusBadRequest
-			case errors.NotFound:
+			case errors2.NotFound:
 				status = http.StatusNotFound
 			default:
 				log.Printf("%+v", err)
 				status = http.StatusInternalServerError
 			}
-			web.Result(status, struct{}{}, errorType.String(), web.ERROR, context)
+			web2.Result(status, struct{}{}, errorType.String(), web2.ERROR, context)
 		} else {
-			web.OkWithData(data, context)
+			web2.OkWithData(data, context)
 		}
 
 	}
@@ -33,7 +33,7 @@ func ErrWrapper(handler func(g *gin.Context) (interface{}, error)) func(*gin.Con
 
 func initRouter() *gin.Engine {
 	var router = gin.Default()
-	router.GET("/blog", ErrWrapper(web.GetBlog))
+	router.GET("/blog", ErrWrapper(web2.GetBlog))
 	return router
 }
 
