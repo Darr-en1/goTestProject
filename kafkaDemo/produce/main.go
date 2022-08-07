@@ -9,8 +9,8 @@ import (
 
 func produce() {
 	// to produce messages
-	topic := "my-topic"
-	partition := 0
+	topic := "my-topic-001"
+	partition := 3
 
 	conn, err := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", topic, partition)
 	if err != nil {
