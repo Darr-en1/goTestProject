@@ -1,0 +1,44 @@
+syntax = "proto3";
+package goTestProject;
+option go_package = "goTestProject/grpc-demo/gen/go;trippb";
+
+
+message Location {
+  double latitude = 1;
+  double longtitude = 2;
+}
+
+enum TripStatus {
+  TS_NOT_SPECIFIED = 0;
+  NOT_STARTED = 1;
+  IN_PROGRESS = 2;
+  FINISHED = 3;
+  PAID = 4;
+}
+
+
+// 可以使用(自定义)复合类型 Location
+// 所有的字段都是可选的，因为需要适配新老系统（新老系统字段会变更），故都可以选择不填
+message Trip {
+  string start = 1;
+  string end = 2;
+  Location start_pos = 5;
+  Location end_pos = 6;
+  repeated Location path_locations = 7;
+  int64 duration_sec = 3;
+  int64 fee_cent = 4;
+  TripStatus status = 8;
+}
+
+message GetTripRequest {
+  string id = 1;
+}
+
+message GetTripResponse {
+  string id = 1;
+  Trip trip = 2;
+}
+
+service TripService {
+  rpc GetTrip(GetTripRequest) returns (GetTripResponse);
+}
