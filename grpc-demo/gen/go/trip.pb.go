@@ -75,6 +75,7 @@ func (TripStatus) EnumDescriptor() ([]byte, []int) {
 	return file_trip_proto_rawDescGZIP(), []int{0}
 }
 
+// Location cd grpc-demo && protoc --go_out=gen/go --go_opt=paths=source_relative --go-grpc_out=gen/go --go-grpc_opt=paths=source_relative trip.proto
 type Location struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
