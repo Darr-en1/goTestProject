@@ -6,6 +6,7 @@ import (
 )
 
 // Service gPRC 生成 go 代码为什么会有 UnimplementedServer 和 mustEmbedUnimplementedServer？
+// https://blog.csdn.net/Canon_in_D_Major/article/details/108135724
 type Service struct {
 	*trippb.UnimplementedTripServiceServer
 }
