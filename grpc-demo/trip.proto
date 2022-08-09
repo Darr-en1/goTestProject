@@ -25,8 +25,8 @@ message Trip {
   Location start_pos = 5;
   Location end_pos = 6;
   repeated Location path_locations = 7;
-  int64 duration_sec = 3;
-  int64 fee_cent = 4;
+  int32 duration_sec = 3; // int64  grpc gateway序列化成json为防止越界会被声明成string
+  int32 fee_cent = 4;
   TripStatus status = 8;
 }
 
