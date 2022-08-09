@@ -1,8 +1,8 @@
 syntax = "proto3";
-package goTestProject;
-option go_package = "goTestProject/grpc-demo/gen/go;trippb";
+package goTestProject; // 用户声明 protoc的package,protoc 调用,grpc gateway的调用就会使用到
+option go_package = "goTestProject/grpc-demo/gen/go;trippb"; // 用于声明golang语言的package
 
-
+// cd grpc-demo && protoc --go_out=gen/go --go_opt=paths=source_relative --go-grpc_out=gen/go --go-grpc_opt=paths=source_relative trip.proto
 message Location {
   double latitude = 1;
   double longtitude = 2;

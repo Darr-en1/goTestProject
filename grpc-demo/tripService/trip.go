@@ -5,7 +5,9 @@ import (
 	trippb "goTestProject/grpc-demo/gen/go"
 )
 
+// Service gPRC 生成 go 代码为什么会有 UnimplementedServer 和 mustEmbedUnimplementedServer？
 type Service struct {
+	*trippb.UnimplementedTripServiceServer
 }
 
 func (s Service) GetTrip(ctx context.Context, request *trippb.GetTripRequest) (*trippb.GetTripResponse, error) {

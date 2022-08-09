@@ -7,10 +7,6 @@
 package trippb
 
 import (
-	context "context"
-	grpc "google.golang.org/grpc"
-	codes "google.golang.org/grpc/codes"
-	status "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -505,84 +501,4 @@ func file_trip_proto_init() {
 	file_trip_proto_rawDesc = nil
 	file_trip_proto_goTypes = nil
 	file_trip_proto_depIdxs = nil
-}
-
-// Reference imports to suppress errors if they are not otherwise used.
-var _ context.Context
-var _ grpc.ClientConnInterface
-
-// This is a compile-time assertion to ensure that this generated file
-// is compatible with the grpc package it is being compiled against.
-const _ = grpc.SupportPackageIsVersion6
-
-// TripServiceClient is the client API for TripService service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
-type TripServiceClient interface {
-	GetTrip(ctx context.Context, in *GetTripRequest, opts ...grpc.CallOption) (*GetTripResponse, error)
-}
-
-type tripServiceClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewTripServiceClient(cc grpc.ClientConnInterface) TripServiceClient {
-	return &tripServiceClient{cc}
-}
-
-func (c *tripServiceClient) GetTrip(ctx context.Context, in *GetTripRequest, opts ...grpc.CallOption) (*GetTripResponse, error) {
-	out := new(GetTripResponse)
-	err := c.cc.Invoke(ctx, "/goTestProject.TripService/GetTrip", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// TripServiceServer is the server API for TripService service.
-type TripServiceServer interface {
-	GetTrip(context.Context, *GetTripRequest) (*GetTripResponse, error)
-}
-
-// UnimplementedTripServiceServer can be embedded to have forward compatible implementations.
-type UnimplementedTripServiceServer struct {
-}
-
-func (*UnimplementedTripServiceServer) GetTrip(context.Context, *GetTripRequest) (*GetTripResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTrip not implemented")
-}
-
-func RegisterTripServiceServer(s *grpc.Server, srv TripServiceServer) {
-	s.RegisterService(&_TripService_serviceDesc, srv)
-}
-
-func _TripService_GetTrip_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTripRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TripServiceServer).GetTrip(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/goTestProject.TripService/GetTrip",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TripServiceServer).GetTrip(ctx, req.(*GetTripRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-var _TripService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "goTestProject.TripService",
-	HandlerType: (*TripServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetTrip",
-			Handler:    _TripService_GetTrip_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "trip.proto",
 }
