@@ -34,7 +34,9 @@ func startGRPCGateway() {
 	// 分发器，将http请求分发到grpc server
 	mux := runtime.NewServeMux()
 
-	err := trippb.RegisterTripServiceHandlerFromEndpoint(c, mux, "localhost:8081", []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())})
+	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
+
+	err := trippb.RegisterTripServiceHandlerFromEndpoint(c, mux, "localhost:8081", opts)
 	if err != nil {
 		log.Fatalf("cannot grpc gateway: %v", err)
 	}
