@@ -24,6 +24,7 @@ func main() {
 	}
 	collection := connect.Database("coolcar").Collection("account")
 	//insertRows(c, collection)
+	//findOneRow(c, collection)
 	findRow(c, collection)
 }
 
@@ -69,5 +70,6 @@ func findRow(ctx context.Context, collection *mongo.Collection) {
 			panic(err)
 		}
 		fmt.Printf("%+v", row)
+		fmt.Println(row.ID.Hex())
 	}
 }
