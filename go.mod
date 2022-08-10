@@ -10,6 +10,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/segmentio/kafka-go v0.4.33
 	github.com/xuri/excelize/v2 v2.6.0
+	go.mongodb.org/mongo-driver v1.10.1
 	go.uber.org/zap v1.22.0
 	golang.org/x/net v0.0.0-20220809012201-f428fae20770
 	golang.org/x/text v0.3.7
@@ -44,7 +45,6 @@ require (
 	github.com/xuri/efp v0.0.0-20220407160117-ad0f7a785be8 // indirect
 	github.com/xuri/nfp v0.0.0-20220409054826-5e722a1d9e22 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
-	go.mongodb.org/mongo-driver v1.10.1 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d // indirect
