@@ -7,6 +7,7 @@ import (
 	trip "goTestProject/grpc-demo/tripService"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/encoding/protojson"
 	"log"
 	"net"
 	"net/http"
@@ -32,7 +33,12 @@ func startGRPCGateway() {
 	defer cancel()
 
 	// 分发器，将http请求分发到grpc server
-	mux := runtime.NewServeMux()
+	mux := runtime.NewServeMux(runtime.WithMarshalerOption(
+		runtime.MIMEWildcard,
+		// protoc 序列化枚举类型 使用数字 1 not NOT_STARTED
+		&runtime.JSONPb{MarshalOptions: protojson.MarshalOptions{UseEnumNumbers: true}},
+	),
+	)
 
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
