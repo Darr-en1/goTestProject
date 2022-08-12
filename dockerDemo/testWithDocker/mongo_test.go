@@ -7,19 +7,33 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"goTestProject/dockerDemo/commons"
+	"log"
 	"reflect"
+	"sync"
 	"testing"
 )
+
+var (
+	once       sync.Once
+	collection *mongo.Collection
+)
+
+func getAccountCollection(ctx context.Context) *mongo.Collection {
+	once.Do(func() {
+		connect, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoURI))
+		if err != nil {
+			log.Fatalf("cannot connect mongo: %+v", err)
+		}
+		collection = connect.Database("coolar").Collection("account")
+	})
+	return collection
+}
 
 // 表格驱动测试 golang 推荐的测试方式，输入输出非常直观
 
 func TestMongo_InsertManyAccount(t *testing.T) {
 	c := context.Background()
-	connect, err := mongo.Connect(c, options.Client().ApplyURI(mongoURI))
-	if err != nil {
-		t.Fatalf("cannot connect mongo: %+v", err)
-	}
-	collection := connect.Database("coolar").Collection("account")
+	collection := getAccountCollection(c)
 
 	type fields struct {
 		Collection *mongo.Collection
@@ -71,11 +85,7 @@ func TestMongo_InsertManyAccount(t *testing.T) {
 
 func TestMongo_FindOneAccount(t *testing.T) {
 	c := context.Background()
-	connect, err := mongo.Connect(c, options.Client().ApplyURI(mongoURI))
-	if err != nil {
-		t.Fatalf("cannot connect mongo: %+v", err)
-	}
-	collection := connect.Database("coolar").Collection("account")
+	collection := getAccountCollection(c)
 
 	type fields struct {
 		Collection *mongo.Collection
@@ -107,7 +117,7 @@ func TestMongo_FindOneAccount(t *testing.T) {
 			m := &Mongo{
 				Collection: tt.fields.Collection,
 			}
-			_, err = m.FindOneAccount(tt.args.ctx, tt.args.filter)
+			_, err := m.FindOneAccount(tt.args.ctx, tt.args.filter)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("FindOneAccount() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -118,11 +128,7 @@ func TestMongo_FindOneAccount(t *testing.T) {
 
 func TestMongo_ResolveAccountWithID(t *testing.T) {
 	c := context.Background()
-	connect, err := mongo.Connect(c, options.Client().ApplyURI(mongoURI))
-	if err != nil {
-		t.Fatalf("cannot connect mongo: %+v", err)
-	}
-	collection := connect.Database("coolar").Collection("account")
+	collection := getAccountCollection(c)
 
 	idObj := primitive.NewObjectID()
 	newIdObj := primitive.NewObjectID()
