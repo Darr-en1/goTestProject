@@ -13,18 +13,24 @@ type Account struct {
 }
 
 const (
-	OpenIDField = "open_id"
-	IDField     = "_id"
+	OpenIDField     = "open_id"
+	IDField         = "_id"
+	NameField       = "name"
+	LoginCountField = "login_count"
 )
 
+// Set $set 如果结果存在但是修改的项包含_id 是不被允许的
 func Set(v interface{}) bson.M {
 	return bson.M{
 		"$set": v,
 	}
 }
 
-func SetOnInsert() bson.M {
-	return
+// SetOnInsert $setOnInsert  如果结果存在会修改除了_id 以外的其它行
+func SetOnInsert(v interface{}) bson.M {
+	return bson.M{
+		"$setOnInsert": v,
+	}
 }
 
 func MustObjID(id string) primitive.ObjectID {
