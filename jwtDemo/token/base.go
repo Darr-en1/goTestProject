@@ -1,7 +1,7 @@
-package jwt
+package token
 
 import "time"
 
-type TokenGenerator interface {
+type Generator interface {
 	GenerateToken(code string, expire time.Duration) (string, error)
 }

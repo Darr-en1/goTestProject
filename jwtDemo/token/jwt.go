@@ -1,4 +1,4 @@
-package jwt
+package token
 
 import (
 	"crypto/rsa"
@@ -12,21 +12,21 @@ type JWTTokenGen struct {
 	nowFunc    func() time.Time
 }
 
-func NewJWTTokenGen(Issuer string, privateKey *rsa.PrivateKey) *JWTTokenGen {
+func NewJWTTokenGen(Issuer string, privateKey *rsa.PrivateKey, nowFunc func() time.Time) *JWTTokenGen {
 	return &JWTTokenGen{
 		privateKey: privateKey,
 		issuer:     Issuer,
-		nowFunc:    time.Now,
+		nowFunc:    nowFunc,
 	}
 }
 
-func (J JWTTokenGen) GenerateToken(code string, expire time.Duration) (string, error) {
-	nowTime := J.nowFunc()
-	tkn := jwt.NewWithClaims(jwt.SigningMethodES512, jwt.RegisteredClaims{
-		Issuer:    J.issuer,
+func (t *JWTTokenGen) GenerateToken(code string, expire time.Duration) (string, error) {
+	nowTime := t.nowFunc()
+	tkn := jwt.NewWithClaims(jwt.SigningMethodRS512, jwt.RegisteredClaims{
+		Issuer:    t.issuer,
 		IssuedAt:  jwt.NewNumericDate(nowTime),
 		ExpiresAt: jwt.NewNumericDate(nowTime.Add(expire)),
 		Subject:   code,
 	})
-	return tkn.SignedString(J.privateKey)
+	return tkn.SignedString(t.privateKey)
 }

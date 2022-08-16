@@ -1,4 +1,4 @@
-package jwt
+package token
 
 import (
 	"crypto/rsa"
@@ -7,9 +7,45 @@ import (
 	"time"
 )
 
-func TestJWTTokenGen_GenerateToken(t *testing.T) {
-	privateKey := "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAkuBEzR3UtdLx/j6zEy802VgLREt0vqg/XxxqSFEXH6tn/ziL\nDGwjswododYTh5RR/HUtwwLX+ErgNxWtAe6J1lWo/LTePZ9YyOTA1rpizSbivKc4\nwTkhqB52aDUxBxpFqKaPf2Hr9nLmuNhHZGpYXYfbe0Ko5lFk+g1SoE3eCR2AKluf\nCdJi+bQb5utAEsU2AXW2FXFr/plI15Msv/lrJxKi9EUWqbAVVb17ufj7qeQAQnQY\nulPfsN4NmysF2AgLL3BRSO1AVi4hREZb0ykY2vr6QHFbCJicQXBWIn3I0pfS9pqm\njIXpsk9KNQj2b0bXF9RXGXvqauY5hPkPY1zq1wIDAQABAoIBAFMUlvZrrFmZVBdb\nwhHU/xD+M4lTIVuDci1Ltnbnn6vjWjVM96J0PRFWZIKZxHxJksK6ScNohV/GguPF\n2BIiq0dZNviTGq9CxocElmwgDCk9mL3b3Ue3GGmvqYyyoeQBoWuPo9YLPt0uC4J9\nnIyZdxiY87bacw2s9vBWvuk8gp8medbs1D5blid/KCkMeMOs4PqPCYxUKOi6srEf\n3MG2XpgyWRRXYRDFe4jzyZ8EgKE5TodN7EMk8UbopJbTjubDtK59lNhM7G7xam3+\nKcjt5wF5MBYBItjVsdjW0PP4uhEwv+pS5EQqGVjUUBiWbOzaNdGxqHiT4DZGrop+\nrvlwccECgYEA4g4H9lHkIwaVbreqLM4w72caz/oOf+XhBCPUZsZ4/qgd3gNDbFPL\nzBVK9567lXxjXJSPwqkPuU7q+6uQcdaPbqb/NR1b2x2dLTGP75E8/qRsaWr8HwDt\nDP+10svQsa7kVtPKQKyZKC9Ehkhpfz1ksBNL7NwDiseoC5aQkVAc0zcCgYEAplUg\n0YCHFR7C8ajma0CB3+RV22MI5DRDJvl2BBubncAJGQGaxKNemqca0Sd/HauNVW1L\nD52IYAEpA4G7z2KmgOGeq9tzMuErTKY2q2jBR+J1VeK+L96JSDUijGErBZmBk7DS\n0x11bemQ4Xz37jnWeimgd1+Bf1ctfVvqrMU9tWECgYBvWlALwz0pD8YueuSmG4+5\nbkWj616XHAriui+XzO6vKutDgMIGq6R5TIfYQGXQ9iwP39KNJjBrrPdNr66AlRuk\nezi91k94OTdCmuZ3MUkleqM4ro2xTAh5XcEYLHQKAsfSCZPYle0AAYC00Ri+p+Rg\nY7ED5UENbNpXkvx1yEvaswKBgEd0ZqbZqi4+isy6HFKS4bhHJUMcJmOyt+50WGin\nW5DHQKFHeS9kZ23Uv8Z+SzN50TuTuh05Na7YkL/66a3L2W+gfUOjALgo1ysUdIPq\neq3g8Ts2LzHtTdiBSxg3Xf4H1gyWd9tN2nafUigsQW5L1oGghFkD5GPKFba21/fk\nu//BAoGBAIVW+HNip/p2L4jjXz1XlI8ZcJ8xp1H63TSiclji8NLPYQFLCzCkvJq/\niWRsIcKnwOxb0UFhjKIyAx7xhloarFPdiBf+Icth51wBf1v8OhhVcY2Re/gu+pRv\nH+9qxpNjQZM6yT4w46VNlg750qE/30iq2EK138dEoucLfRhWRU3O\n-----END RSA PRIVATE KEY-----"
+/*
+// json key 先后顺序不同生成的token会一样
 
+	{
+	  "iss": "www.darr-en1.top",
+	  "sub": "darr_en1",
+	  "exp": 1516242622,
+	  "iat": 1516239022
+	}
+*/
+const privateKey = `-----BEGIN RSA PRIVATE KEY-----
+MIIEoQIBAAKCAQBcgJ7S8Lx0XkxwW5XYb38MxCXgaCXug/WUU6fU8g5FHY+wHcSY
+Hl4L+T7oRsE0mtDDNAWyPAu9nlwsEzh4nzpqCN/LPqd7Xfs7fyjJglM2rvoX19YH
+mNuXtgKr67zrUE9QlOQ1ro9+HSSHSf/eE8RKNxSwC1Al8oyxXUeaqRR+2gPLP+8L
+e4nb9xyUgrdVi5Kj1DA6J5F9/bpmkVLMvMid2Fpk9G19Xq3y1fgMLclqHpBipu8D
+wvwayaPPM7eMmgUthLXS/JA5gWq7AyMruFehtOUNvY9tWVgwNaY966FmWxZeklGZ
+2Vp5WGfoz1CKqaF3LbvwkqPKAjoAqfw+CXaJAgMBAAECggEABGR3Jj0YNc5kgtFW
+hDiHJ+wIgGdxpanOd4Sha5My6kVFFW/UbgTDIn5rZkw10HGpiBtoSdZgGFj0t4MS
+I2gsNezF87i96zXDQEgBf9AYc3hLl+Y/24x+oO2bot5G0kW1/nWTgJkRZ0OrAGGb
+LMhzgbKr4NAotiSWWbW8OLPerUdOOUMHVeaFOrEGk1E3yC7+/2LC+X7W4eUAdzUM
+OSWQoZxNw6G0Mw+8OAvVWNHrjOCHxhkCG+nNdUtaOe2nLzY8+MOXXIEiQ/Vpf71n
+icb/PVHUqvzY55wrSh1FbCFIj4SmbAgM6SwcBxOBI3GOAe7PBdy03WwEZVul21mr
+dl4QoQKBgQCvczso8oFYJVhd5KwNZWhOyeGUAG8+lTaD09UUNtwQZLf8vPF4iiG2
+VYOGQKT284P0CJFKvjL/Kvxbyar42B6XaKOXAIXGbIvQFlsQwwJe3MRef7pcwU9j
+7d+nJPLn0s95UNBv0fIm6lDHIEPmc3u3uUolJ4wcgSoVJLg+jILh8wKBgQCG+H3Q
+jPqYRuMVMtEk4xOJvimyQCbaasMSCBTOMwQcUmLimOtHenuLtFnl5UK0Siz745AH
+5dEG4epG7dpB7KHpktFQ1GXHaEwGJbvfzYUwWj1cCkSwAIQfLTsNdd6sWTRBhagj
+fXRDv8R8BDW+CkeAD9gtUIVkStCj9FU2H01okwKBgAbpjU0hsMLeRcr9NWIZurBP
+99ky4y8eBdXPxLdVKfpjXXRRpVnQZ1+dot7pMRahpXM52y+Mqsmu0d5z5Y6ERUBF
+2Rwb4ylcIW4DU3cnl7JRFFN8yMTawNv5BTS6me9UOORYsL2XEelClggiV0p/BkLI
+xAkOs9BzrkrC9ZdRRd7NAoGAdnMfn2YKCpezdIgrac7q96hu2WNZdbfaSDnVYHz/
+L4fSBoEjgpBoWlvFxW9lEepC/jBg172Fqx+axfK5578u/Vh+4Av24oCSr5ZwAeJQ
+7/VSAjN0wm1Bhkbgm1iFOgXzSUluHO9dmJN0cU4UiBpnU2kUU/hliHXsEuc73Qqt
+mYcCgYB6CmMIOGg3N20ipc4UX0qwoUli3Aw+3772C6C6boFm4HQRPY4a5eYCy8s2
+Aiuu4h+NdMi+5C/npnZIHZv/kJLCFs92iLNB1ZCN7svsArnySk+wpAQ49H/VOBPg
+D4n8S+5skX+sio2kGrqBpEgWFvOeDonK+oyGEV7Nc31dPPYU0A==
+-----END RSA PRIVATE KEY-----`
+
+func TestJWTTokenGen_GenerateToken(t *testing.T) {
 	key, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(privateKey))
 	if err != nil {
 		t.Fatalf("cannot parse private key:%v", err)
@@ -44,17 +80,15 @@ func TestJWTTokenGen_GenerateToken(t *testing.T) {
 				code:   "darr_en1",
 				expire: time.Hour,
 			},
-			want:    "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTYyNDI2MjIsImlhdCI6MTUxNjIzOTAyMiwiaXNzIjoid3d3LmRhcnItZW4xLnRvcCIsInN1YiI6ImRhcnJfZW4xIn0.NR7IIOqPL09JGQ2ZA5ZM2TNreBVTtbgzt8-XdMUAOMMVf6fgESyXdqhX5Du-PaKNhLlWaI0JthNLIkrgPKcNbXoXMJqL3f4mlHzIq5KwnCmEQDRMXN-mBsbOz6qNIy1ny1RI1C5Wj5sV6-knL84VA8GYHJhNUnzOXe8diVic-cWaWHb1NJz6el45UB0mCOXu01HI7A3l7krxxGUw4MXznFMXqmc5mrWRKfqFmp8ZsnwrPOD9ZKU7xWm6rGseqT6haGS6Ci_bxH8WonKx236sw1hNCGFSvHHMJhQSfgtyFWYPRrUeVu6kT0q-0UCQU4BAr7NJqY5bhJ8rdYDX48FnAA",
+			want:    "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ3d3cuZGFyci1lbjEudG9wIiwic3ViIjoiZGFycl9lbjEiLCJleHAiOjE1MTYyNDI2MjIsImlhdCI6MTUxNjIzOTAyMn0.HInvEyJxa6Vn9WbPdMzb2A2tD_IyE4cH3cQOLmJo-maDpHUa_T8oHe3h1VDa2v9cuN88fiHpVT6eBJcLxKKilGiyQclROZDRVYqEppaRUwIVZbWCp1HI4jBUa8mMnk3pDi9ES5ijfFtqjBDsCFzuZu9A1cFllZ-zOealCyWzoEJob_PDyWc8teA0vuosGhmQdEM-tSXXpMLbe4X36fN92QqyUJUzodRTiu-AMF1b4WY5D2sFSmcgiydVElPDYmnIweHgEQpSwBBw404xF9IikU73GhDlhaTGHcfgQayPhtpyDPKFZh92OfB2JOsKfG3CSrxxMvXtd7_DQUXXajI-oA",
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			J := JWTTokenGen{
-				privateKey: tt.fields.privateKey,
-				issuer:     tt.fields.issuer,
-				nowFunc:    tt.fields.nowFunc,
-			}
+
+			J := NewJWTTokenGen(tt.fields.issuer, tt.fields.privateKey, tt.fields.nowFunc)
+
 			got, err := J.GenerateToken(tt.args.code, tt.args.expire)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GenerateToken() error = %v, wantErr %v", err, tt.wantErr)
