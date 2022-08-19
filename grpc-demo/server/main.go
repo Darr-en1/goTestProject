@@ -19,7 +19,15 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v\n", err)
 	}
-	s := grpc.NewServer()
+	// 为grpc server 设置拦截器
+	s := grpc.NewServer(
+	//grpc.UnaryInterceptor( //为grpc server 设置拦截器
+	//	//为grpc server 设置拦截器
+	//	func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+	//		return nil, nil
+	//	},
+	//),
+	)
 	trippb.RegisterTripServiceServer(s, &trip.Service{})
 	if err = s.Serve(listen); err != nil {
 		log.Fatalf("failed to serve: %v", err)

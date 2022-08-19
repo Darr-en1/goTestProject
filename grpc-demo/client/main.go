@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"log"
+	"time"
 )
 
 func main() {
@@ -21,7 +22,10 @@ func main() {
 		}
 	}(conn)
 	client := trippb.NewTripServiceClient(conn)
-	trip, err := client.GetTrip(context.Background(), &trippb.GetTripRequest{Id: "1111111"})
+	// 设置超时时间
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	trip, err := client.GetTrip(ctx, &trippb.GetTripRequest{Id: "1111111"})
 	if err != nil {
 		log.Fatalf("GetTrip error: %v", err)
 	}

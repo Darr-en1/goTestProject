@@ -3,6 +3,7 @@ package trip
 import (
 	"context"
 	trippb "goTestProject/grpc-demo/gen/go"
+	"time"
 )
 
 // Service gPRC 生成 go 代码为什么会有 UnimplementedServer 和 mustEmbedUnimplementedServer？
@@ -12,6 +13,7 @@ type Service struct {
 }
 
 func (s Service) GetTrip(ctx context.Context, request *trippb.GetTripRequest) (*trippb.GetTripResponse, error) {
+	time.Sleep(5 * time.Second)
 	return &trippb.GetTripResponse{
 		Id: request.Id,
 		Trip: &trippb.Trip{
