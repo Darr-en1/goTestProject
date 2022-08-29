@@ -2,11 +2,15 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"goTestProject/consulDemo/base"
 	trippb "goTestProject/grpc-demo/gen/go"
 	trip "goTestProject/grpc-demo/tripService"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/health"
+	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/protobuf/encoding/protojson"
 	"log"
 	"net"
@@ -15,6 +19,11 @@ import (
 
 func main() {
 	go startGRPCGateway()
+	// 服务发现
+	address, port := base.GetServicesWithFilter(`Service=="darr_en1"`)
+
+	fmt.Println(address, port)
+
 	listen, err := net.Listen("tcp", ":8081")
 	if err != nil {
 		log.Fatalf("failed to listen: %v\n", err)
@@ -29,6 +38,12 @@ func main() {
 	//),
 	)
 	trippb.RegisterTripServiceServer(s, &trip.Service{})
+	// 为grpc 服务注册 HealthCheck 接口
+	grpc_health_v1.RegisterHealthServer(s, health.NewServer())
+
+	// 服务注册  address 拿本机ip(其他机器能通过这个访问到你)
+	base.RegisterWithGRPCHealthCheck("172.25.33.164", 8081, "grpcServer", []string{"grpc", "test"}, "grpcServer")
+
 	if err = s.Serve(listen); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
