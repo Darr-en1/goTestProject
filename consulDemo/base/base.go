@@ -53,8 +53,8 @@ func Register(address string, port int, name string, tags []string, id string) {
 // RegisterWithGRPCHealthCheck 需要grpc 先注册健康监测的方法 grpc_health_v1.RegisterHealthServer(s, health.NewServer())
 func RegisterWithGRPCHealthCheck(address string, port int, name string, tags []string, id string) {
 	registration := api.AgentServiceRegistration{
-		ID:      id,
-		Name:    name,
+		ID:      id,   // id 一样的话会被认定为同一个服务 通常使用uuid  uuid.NewV4()
+		Name:    name, // Name一样的会被认定为同一组服务
 		Tags:    tags,
 		Port:    port,
 		Address: address,

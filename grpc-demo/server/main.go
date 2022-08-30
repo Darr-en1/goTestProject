@@ -42,7 +42,7 @@ func main() {
 	grpc_health_v1.RegisterHealthServer(s, health.NewServer())
 
 	// 服务注册  address 拿本机ip(其他机器能通过这个访问到你)
-	base.RegisterWithGRPCHealthCheck("172.25.33.164", 8081, "grpcServer", []string{"grpc", "test"}, "grpcServer")
+	base.RegisterWithGRPCHealthCheck("172.25.40.121", 8081, "grpcServer", []string{"grpc", "test"}, "grpcServer")
 
 	if err = s.Serve(listen); err != nil {
 		log.Fatalf("failed to serve: %v", err)
