@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	_ "net/http/pprof"
+	"time"
 )
 
 func setup() {
@@ -60,14 +62,14 @@ func app(stop <-chan struct{}) error {
 
 func pprof(stop <-chan struct{}) error {
 	// 注意这里主要是为了模拟服务意外退出，用于验证一个服务退出，其他服务同时退出的场景
-	//go func() {
-	//  // DefaultServeMux 默认注册了/debug/pprof 路由
-	//	server(http.DefaultServeMux, ":8081", stop)
-	//}()
-	//
-	//time.Sleep(5 * time.Second)
-	//return fmt.Errorf("mock pprof exit")
-	return server(http.DefaultServeMux, ":8081", stop)
+	go func() {
+		// DefaultServeMux 默认注册了/debug/pprof 路由
+		server(http.DefaultServeMux, ":8081", stop)
+	}()
+
+	time.Sleep(5 * time.Second)
+	return fmt.Errorf("mock pprof exit")
+	//return server(http.DefaultServeMux, ":8081", stop)
 }
 
 // 启动一个服务
